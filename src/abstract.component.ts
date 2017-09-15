@@ -2,12 +2,12 @@
 // This project is licensed under the terms of the MIT license.
 // https://github.com/akserg/ng2-dnd
 
-import {Injectable, ChangeDetectorRef} from '@angular/core';
-import {ElementRef} from '@angular/core';
+import { Injectable, ChangeDetectorRef, ViewRef } from '@angular/core';
+import { ElementRef } from '@angular/core';
 
-import {DragDropConfig, DragImage} from './dnd.config';
-import {DragDropService} from './dnd.service';
-import {isString, isFunction, isPresent, createImage, callFun} from './dnd.utils';
+import { DragDropConfig, DragImage } from './dnd.config';
+import { DragDropService } from './dnd.service';
+import { isString, isFunction, isPresent, createImage, callFun } from './dnd.utils';
 
 @Injectable()
 export abstract class AbstractComponent {
@@ -190,10 +190,15 @@ export abstract class AbstractComponent {
     }
     /******* Change detection ******/
 
-    detectChanges() {
+    detectChanges () {
         // Programmatically run change detection to fix issue in Safari
         setTimeout(() => {
-            this._cdr.detectChanges();
+            if ( this._cdr !== null &&
+                this._cdr !== undefined &&
+                ! (this._cdr as ViewRef).destroyed ) {
+                    this._cdr.detectChanges();
+            }
+
         }, 250);
     }
 
@@ -218,7 +223,7 @@ export abstract class AbstractComponent {
             this._onDragOverCallback(event);
         }
     }
-    
+
     private _onDragLeave(event: Event): void {
         // console.log('ondragleave._isDropAllowed', this._isDropAllowed);
         if (this._isDropAllowed(event)) {
@@ -228,10 +233,10 @@ export abstract class AbstractComponent {
     }
 
     private _onDrop(event: Event): void {
-        // Necessary. Allows us to drop.
-        this._preventAndStop(event);
         // console.log('ondrop._isDropAllowed', this._isDropAllowed);
-        if (this._isDropAllowed(event)) {            
+        if (this._isDropAllowed(event)) {
+            // Necessary. Allows us to drop.
+            this._preventAndStop(event);
 
             this._onDropCallback(event);
 

@@ -680,7 +680,7 @@ class Widget {
 
 # Retreiving files in a drop zone
 
-Sinze it is possible to drag and drop one or more files to a drop zone, you need to handle the incomming files.
+Since it is possible to drag and drop one or more files to a drop zone, you need to handle the incomming files.
 
 ```js
 import {Component} from '@angular/core';
